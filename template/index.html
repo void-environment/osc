@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OSC</title>
+
+    <style>
+        body, html{
+            width: 100%;
+            height: 100%;
+            padding: 0;
+            margin: 0;
+            overflow: hidden;
+            background-color: #304164;
+        }
+        .page{
+
+            position: absolute;
+            top: 0;
+            left: 0;
+
+            z-index: 100;
+
+            width: 100%;
+            height: 100%;
+
+            font-size: 150px;
+
+            background-color: #304164;
+            color: #fff;
+
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            /* background-image: url('./src/0.jpg');
+            background-size: cover;
+            background-position: center; */
+            transition: 1s;
+
+            text-shadow: 0 0 10px black;
+        }
+        .any{
+            position: absolute;
+            top: 10px;
+            left: calc(100% - 60px);
+            transform: translateX(-100%);
+
+            color: black;
+            font-weight: bold;
+
+            display: flex;
+            flex-direction: column;
+            z-index: 1000;
+        }
+        .any>span{
+            background-color: #fff;
+            box-shadow:  0 0 5px #304164 inset;
+            border-radius: 7px;
+            padding: 10px;
+            margin-top: 10px;
+            min-width: 200px;
+        }
+
+        video{
+            width: 100%;
+            height: 100%;
+
+            position: absolute;
+            top: 0;
+            left: 0;
+
+            object-fit: cover;
+        }
+    </style>
+</head>
+<body>
+
+    <p class="any">
+        <span class="point-text">Point: /</span>
+        <span class="args-text">Args: (0,)</span>
+        <span class="ip-text">Local IP: 127.1.1.0</span>
+    </p>
+
+    <div class="page">
+        <video src="./src/video/1/1.1.mp4" autoplay mute></video>
+    </div>
+
+    <script>
+        let count = 1;
+        let rfidCount = 1;
+
+        //const video = document.querySelector('video');
+        const video = document.querySelector('video');
+        const page = document.querySelector('.page');
+
+        document.addEventListener('click', () => { video.play(); })
+
+        function right(){
+
+            if(++count > 8) count = 1;
+
+            changeContent(count);
+        }
+        function left(){
+
+            if(--count < 1) count = 8;
+            changeContent(count);
+        }
+
+        function changeContent(count){
+            page.style.filter = "blur(25px)"; 
+            page.style.opacity = 0;
+
+            setTimeout(() => {
+
+                video.src = `./src/video/${count}/${count}.${rfidCount}.mp4`;
+                video.load();
+                video.play(); 
+
+            }, 1000);
+            
+            setTimeout(() => {
+               
+                page.style.filter = "blur(0)";
+                page.style.opacity = 1;
+            }, 1100);
+        }
+
+        video.addEventListener('ended', function() {
+            if(++count > 8) count = 1;
+            changeContent(count);
+        });
+
+        function point(data){
+            document.querySelector('.point-text').textContent = "Request: " + data;
+        }
+        function args(data){
+            document.querySelector('.args-text').textContent = "Args: " + data;
+        }
+        function getIP(data){
+            document.querySelector('.ip-text').textContent = "Local IP : " + data;
+        }
+        function rfid(data) {
+            rfidCount = data;
+            count = 1;
+            changeContent(count);
+        }
+
+        function start(){ video.play(); }
+        function stop(){ video.pause(); }
+    </script>
+</body>
+</html>

@@ -1,0 +1,6 @@
+ButtonLeft: 'button s:"left"'
+ButtonRight: 'button s:"right"'
+VideoPlay: "button start"
+VideoStop: "button stop"
+IP: ""
+Port: 8010
